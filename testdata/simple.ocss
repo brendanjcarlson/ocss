@@ -1,0 +1,9 @@
+@media (min-width: 1rem) {
+    html {
+        background: hsl(var(--foobar));
+    }
+
+    body {
+        background: green;
+    }
+}
