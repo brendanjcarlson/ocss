@@ -1,18 +1,13 @@
 package types
 
-type Property string
-
-func (p Property) IsProperty() bool {
-	_, ok := propertyEnumValidationMap[p]
-	return ok
+func IsProperty(l Literal) bool {
+	if _, ok := propertyEnumValidationMap[l]; ok {
+		return true
+	}
+	return false
 }
 
-const (
-	PropertyFont     Property = "font"
-	PropertyFontSize Property = "font-size"
-)
-
-var propertyEnumValidationMap = map[Property]bool{
-	PropertyFont:     true,
-	PropertyFontSize: true,
+var propertyEnumValidationMap = map[Literal]bool{
+	"font":      true,
+	"font-size": true,
 }

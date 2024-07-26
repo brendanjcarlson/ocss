@@ -1,35 +1,19 @@
 package types
 
-type AbsoluteSize string
-
-func (a AbsoluteSize) IsAbsoluteSize() bool {
-	_, ok := absoluteSizeEnumValidationMap[a]
-	return ok
+func IsAbsoluteSize(l Literal) bool {
+	if _, ok := absoluteSizeEnumValidationMap[l]; ok {
+		return true
+	}
+	return false
 }
 
-const (
-	AbsoluteSizeXXSmall  AbsoluteSize = "xx-small"
-	AbsoluteSizeXSmall   AbsoluteSize = "x-small"
-	AbsoluteSizeSmall    AbsoluteSize = "small"
-	AbsoluteSizeMedium   AbsoluteSize = "medium"
-	AbsoluteSizeLarge    AbsoluteSize = "large"
-	AbsoluteSizeXLarge   AbsoluteSize = "x-large"
-	AbsoluteSizeXXLarge  AbsoluteSize = "xx-large"
-	AbsoluteSizeXXXLarge AbsoluteSize = "xxx-large"
-)
-
-var absoluteSizeEnumValidationMap = map[AbsoluteSize]bool{
-	AbsoluteSizeXXSmall:  true,
-	AbsoluteSizeXSmall:   true,
-	AbsoluteSizeSmall:    true,
-	AbsoluteSizeMedium:   true,
-	AbsoluteSizeLarge:    true,
-	AbsoluteSizeXLarge:   true,
-	AbsoluteSizeXXLarge:  true,
-	AbsoluteSizeXXXLarge: true,
-}
-
-var absoluteSizePropertyValidationMap = map[Property]bool{
-	PropertyFont:     true,
-	PropertyFontSize: true,
+var absoluteSizeEnumValidationMap = map[Literal]bool{
+	"xx-small":  true,
+	"x-small":   true,
+	"small":     true,
+	"medium":    true,
+	"large":     true,
+	"x-large":   true,
+	"xx-large":  true,
+	"xxx-large": true,
 }
