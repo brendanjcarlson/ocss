@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/brendanjcarlson/ocss/token"
+import (
+	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
+)
 
 var _ ExpressionNode = (*Identifier)(nil)
 
@@ -14,7 +17,7 @@ func (i *Identifier) CSS(minified bool) string {
 }
 
 // Literal implements ExpressionNode.
-func (i *Identifier) Literal() token.Literal {
+func (i *Identifier) Literal() types.Literal {
 	return i.Token.Literal()
 }
 

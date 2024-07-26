@@ -6,6 +6,7 @@ import (
 
 	"github.com/brendanjcarlson/ocss/testutils"
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 func Test_Lexer(t *testing.T) {
@@ -17,20 +18,18 @@ func Test_Lexer(t *testing.T) {
 
 	for _, tok := range tokens {
 		if tok.Kind() != token.KIND_WHITESPACE {
-			if tok.Literal().IsKeyword() {
-				fmt.Println(tok, "keyword")
-			} else if tok.Literal().IsAtKeyword() {
+			if types.IsAtKeyword(tok.Literal()) {
 				fmt.Println(tok, "element")
-			} else if tok.Literal().IsProperty() {
+			} else if types.IsProperty(tok.Literal()) {
 				fmt.Println(tok, "property")
-			} else if tok.Literal().IsFunction() {
+			} else if types.IsFunction(tok.Literal()) {
 				fmt.Println(tok, "function")
-			} else if tok.Literal().IsElement() {
-				fmt.Println(tok, "element")
-			} else if tok.Literal().IsPseudoElement() {
-				fmt.Println(tok, "pseudoelement")
-			} else if tok.Literal().IsPseudoClass() {
-				fmt.Println(tok, "pseudoclass")
+			} else if types.IsHtmlElement(tok.Literal()) {
+				fmt.Println(tok, "html element")
+			} else if types.IsPseudoElement(tok.Literal()) {
+				fmt.Println(tok, "pseudo element")
+			} else if types.IsPseudoClass(tok.Literal()) {
+				fmt.Println(tok, "pseudo class")
 			} else {
 				fmt.Println(tok)
 			}

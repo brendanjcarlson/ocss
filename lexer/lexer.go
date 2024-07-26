@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 type Lexer struct {
@@ -12,7 +13,7 @@ type Lexer struct {
 	pos    int
 	row    int
 	bol    int
-	char   token.Char
+	char   types.Char
 	tokens []*token.Token
 }
 
@@ -227,30 +228,30 @@ func (l *Lexer) atEOF() bool {
 	return l.cursor >= len(l.input)
 }
 
-func (l *Lexer) position() token.Position {
-	return token.NewPosition(l.row, l.pos-l.bol+1, l.pos-l.bol+1)
+func (l *Lexer) position() types.SourceLocation {
+	return types.NewSourceLocation(l.row, l.pos-l.bol+1, l.pos-l.bol+1)
 }
 
-func (l *Lexer) positionFrom(start int) token.Position {
-	return token.NewPosition(l.row, start-l.bol+1, l.pos-l.bol+1)
+func (l *Lexer) positionFrom(start int) types.SourceLocation {
+	return types.NewSourceLocation(l.row, start-l.bol+1, l.pos-l.bol+1)
 }
 
-func (l *Lexer) slice(start, end int) token.Literal {
+func (l *Lexer) slice(start, end int) types.Literal {
 	if end >= len(l.input) {
 		end = len(l.input) - 1
 	}
-	return token.Literal(l.input[start:end])
+	return types.Literal(l.input[start:end])
 }
 
-func (l *Lexer) peek() token.Char {
+func (l *Lexer) peek() types.Char {
 	return l.peekN(0)
 }
 
-func (l *Lexer) peekN(offset int) token.Char {
+func (l *Lexer) peekN(offset int) types.Char {
 	if l.atEOF() || l.cursor+offset >= len(l.input) {
 		return 0
 	} else {
-		return token.Char(l.input[l.cursor+offset])
+		return types.Char(l.input[l.cursor+offset])
 	}
 }
 
@@ -266,7 +267,7 @@ func (l *Lexer) consume() {
 	if l.atEOF() {
 		l.char = 0
 	} else {
-		l.char = token.Char(l.input[l.cursor])
+		l.char = types.Char(l.input[l.cursor])
 		if l.char == '\n' {
 			l.row += 1
 			l.bol = l.cursor + 1
@@ -280,7 +281,7 @@ func (l *Lexer) emit(t *token.Token) {
 	l.tokens = append(l.tokens, t)
 }
 
-func (l *Lexer) consumeNumeric(start int) (token.Kind, token.Literal, token.Position) {
+func (l *Lexer) consumeNumeric(start int) (token.Kind, types.Literal, types.SourceLocation) {
 	seenPeriod := false
 numeric:
 	for {
@@ -311,7 +312,7 @@ numeric:
 	return token.KIND_NUMBER, l.slice(start, l.cursor), l.positionFrom(start)
 }
 
-func (l *Lexer) consumeIdentifierLike(start int) (token.Literal, token.Position) {
+func (l *Lexer) consumeIdentifierLike(start int) (types.Literal, types.SourceLocation) {
 	for l.peek().IsIdentifierLike() {
 		l.consume()
 	}

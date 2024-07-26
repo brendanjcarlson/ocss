@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 // Enforce interface implementation at compile time.
@@ -22,7 +23,7 @@ func (d *Declaration) CSS(minified bool) string {
 }
 
 // Literal implements DeclarationNode.
-func (d *Declaration) Literal() token.Literal {
+func (d *Declaration) Literal() types.Literal {
 	out := new(strings.Builder)
 	out.WriteString(d.Property.Literal().String())
 	out.WriteString(d.Colon.Literal().String())
@@ -33,7 +34,7 @@ func (d *Declaration) Literal() token.Literal {
 		out.WriteString(value.Literal().String())
 	}
 	out.WriteString(d.Semicolon.Literal().String())
-	return token.Literal(out.String())
+	return types.Literal(out.String())
 }
 
 // declarationNode implements DeclarationNode.

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 var _ StyleRuleNode = (*StyleRule)(nil)
@@ -21,7 +22,7 @@ func (s *StyleRule) CSS(minified bool) string {
 }
 
 // Literal implements RuleNode.
-func (s *StyleRule) Literal() token.Literal {
+func (s *StyleRule) Literal() types.Literal {
 	depth := 0
 	for parent := s.ParentNode(); parent != nil; parent = parent.ParentNode() {
 		depth++
@@ -44,7 +45,7 @@ func (s *StyleRule) Literal() token.Literal {
 	}
 	out.WriteString("\n")
 
-	return token.Literal(out.String())
+	return types.Literal(out.String())
 }
 
 func (s *StyleRule) ParentNode() RuleNode {
@@ -79,7 +80,7 @@ func (m *MediaOrSupportsAtRule) CSS(minified bool) string {
 }
 
 // Literal implements AtRuleNode.
-func (m *MediaOrSupportsAtRule) Literal() token.Literal {
+func (m *MediaOrSupportsAtRule) Literal() types.Literal {
 	out := new(strings.Builder)
 	out.WriteString("<at-keyword: \"")
 	out.WriteString(m.AtKeyword.Literal().String())
@@ -97,7 +98,7 @@ func (m *MediaOrSupportsAtRule) Literal() token.Literal {
 		out.WriteString(style.Literal().String())
 	}
 
-	return token.Literal(out.String())
+	return types.Literal(out.String())
 }
 
 // ParentNode implements AtRuleNode.

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 var _ SelectorNode = (*ElementSelector)(nil)
@@ -19,7 +20,7 @@ func (e *ElementSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (e *ElementSelector) Literal() token.Literal {
+func (e *ElementSelector) Literal() types.Literal {
 	return e.Token.Literal()
 }
 
@@ -47,7 +48,7 @@ func (c *ClassSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (c *ClassSelector) Literal() token.Literal {
+func (c *ClassSelector) Literal() types.Literal {
 	return c.Identifier.Literal()
 }
 
@@ -76,7 +77,7 @@ func (i *IdSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (i *IdSelector) Literal() token.Literal {
+func (i *IdSelector) Literal() types.Literal {
 	return i.Hash.Literal() + i.Identifier.Literal()
 }
 
@@ -105,7 +106,7 @@ func (p *PseudoClassSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (p *PseudoClassSelector) Literal() token.Literal {
+func (p *PseudoClassSelector) Literal() types.Literal {
 	return p.Colon.Literal() + p.Identifier.Literal()
 }
 
@@ -135,7 +136,7 @@ func (p *PseudoElementSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (p *PseudoElementSelector) Literal() token.Literal {
+func (p *PseudoElementSelector) Literal() types.Literal {
 	return p.ColonOne.Literal() + p.ColonTwo.Literal() + p.Identifier.Literal()
 }
 
@@ -163,12 +164,12 @@ func (c *CombinatorSelector) CSS(minified bool) string {
 }
 
 // Literal implements SelectorNode.
-func (c *CombinatorSelector) Literal() token.Literal {
+func (c *CombinatorSelector) Literal() types.Literal {
 	out := new(strings.Builder)
 	for _, tok := range c.Tokens {
 		out.WriteString(tok.Literal().String())
 	}
-	return token.Literal(out.String())
+	return types.Literal(out.String())
 }
 
 // ParentNode implements SelectorNode.

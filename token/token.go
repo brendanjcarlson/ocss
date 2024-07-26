@@ -1,41 +1,37 @@
 package token
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/brendanjcarlson/ocss/types"
+)
 
 type Token struct {
-	kind     Kind
-	literal  Literal
-	position Position
+	kind           Kind
+	literal        types.Literal
+	sourceLocation types.SourceLocation
 }
 
-func New(kind Kind, literal Literal, position Position) *Token {
-	return &Token{kind, literal, position}
+func New(kind Kind, literal types.Literal, sourceLocation types.SourceLocation) *Token {
+	return &Token{kind, literal, sourceLocation}
 }
 
 func (t *Token) Debug() string {
-	return fmt.Sprintf("%s %s", t.String(), t.position.String())
+	return fmt.Sprintf("%s %s", t.String(), t.sourceLocation.String())
 }
 
 func (t *Token) Kind() Kind {
 	return t.kind
 }
 
-func (t *Token) Literal() Literal {
+func (t *Token) Literal() types.Literal {
 	return t.literal
 }
 
-func (t *Token) Position() Position {
-	return t.position
+func (t *Token) SourceLocation() types.SourceLocation {
+	return t.sourceLocation
 }
 
 func (t *Token) String() string {
 	return fmt.Sprintf("[ KIND: %s | LITERAL: %q ]", t.kind.String(), t.Literal())
-}
-
-func (t *Token) Type() string {
-	if t.kind == KIND_DIMENSION {
-		return "has_type"
-	} else {
-		return "typeless"
-	}
 }

@@ -1,6 +1,8 @@
-package token
+package types
 
-import "unicode"
+import (
+	"unicode"
+)
 
 type Char rune
 

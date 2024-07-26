@@ -1,10 +1,10 @@
 package ast
 
-import "github.com/brendanjcarlson/ocss/token"
+import "github.com/brendanjcarlson/ocss/types"
 
 type Node interface {
 	CSS(minified bool) string
-	Literal() token.Literal
+	Literal() types.Literal
 	node()
 }
 

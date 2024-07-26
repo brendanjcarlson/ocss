@@ -5,6 +5,7 @@ import (
 
 	"github.com/brendanjcarlson/ocss/ast"
 	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 type Parser struct {
@@ -42,10 +43,10 @@ main:
 
 func (p *Parser) consume() {
 	if len(p.tokens) == 0 {
-		p.tok = token.New(token.KIND_EOF, token.Literal(""), token.NewPosition(0, 0, 0))
+		p.tok = token.New(token.KIND_EOF, types.Literal(""), types.NewSourceLocation(0, 0, 0))
 	}
 	if p.cursor >= len(p.tokens) {
-		p.tok = token.New(token.KIND_EOF, token.Literal(""), token.NewPosition(0, 0, 0))
+		p.tok = token.New(token.KIND_EOF, types.Literal(""), types.NewSourceLocation(0, 0, 0))
 	} else {
 		p.tok = p.tokens[p.cursor]
 	}
@@ -105,7 +106,7 @@ func (p *Parser) consumeSelector(parent *ast.StyleRule) ast.SelectorNode {
 	fmt.Println("consuming selector")
 
 	switch {
-	case p.tokIs(token.KIND_IDENTIFIER) && p.tok.Literal().IsElement():
+	case p.tokIs(token.KIND_IDENTIFIER) && types.IsHtmlElement(p.tok.Literal()):
 		return p.consumeElementSelector(parent)
 	case len(p.tok.Literal()) > 0 && p.tok.Literal().String()[0] == '.':
 		return p.consumeClassSelector(parent)
@@ -126,7 +127,7 @@ func (p *Parser) consumeElementSelector(parent *ast.StyleRule) ast.SelectorNode 
 	fmt.Println("consuming element selector")
 
 	if p.peekIs(token.KIND_COMMA, token.KIND_CURLY_BRACKET_OPEN) {
-		if !p.tok.Literal().IsElement() {
+		if !types.IsHtmlElement(p.tok.Literal()) {
 			panic(p.unexpectedToken(p.tok, "html element"))
 		}
 		tok := p.tok
@@ -238,7 +239,7 @@ func (p *Parser) consumeDeclaration(parent *ast.StyleRule) ast.DeclarationNode {
 	if !p.tokIs(token.KIND_IDENTIFIER) {
 		panic(p.unexpectedToken(p.tok, "identifier"))
 	}
-	if !p.tok.Literal().IsProperty() {
+	if !types.IsProperty(p.tok.Literal()) {
 		panic(p.unexpectedToken(p.tok, "property"))
 	}
 
@@ -370,7 +371,7 @@ func (p *Parser) kindIs(tok *token.Token, kind token.Kind, additional ...token.K
 
 func (p *Parser) peekN(offset int) *token.Token {
 	if len(p.tokens) == 0 {
-		return token.New(token.KIND_EOF, token.Literal(""), token.NewPosition(0, 0, 0))
+		return token.New(token.KIND_EOF, types.Literal(""), types.NewSourceLocation(0, 0, 0))
 	}
 	if p.pos+offset >= len(p.tokens) {
 		return p.tokens[len(p.tokens)-1]
@@ -398,16 +399,16 @@ func (p *Parser) unexpectedToken(got *token.Token, expected string) string {
 		return fmt.Sprintf(
 			"\n\tunexpected token: %q\n\tposition: line %d, col %d\n",
 			got.Literal().String(),
-			got.Position().Row(),
-			got.Position().Start(),
+			got.SourceLocation().Row(),
+			got.SourceLocation().Start(),
 		)
 	} else {
 		return fmt.Sprintf(
 			"\n\tunexpected token: %q\n\texpected: %s\n\tposition: line %d, col %d\n",
 			got.Literal().String(),
 			expected,
-			got.Position().Row(),
-			got.Position().Start(),
+			got.SourceLocation().Row(),
+			got.SourceLocation().Start(),
 		)
 	}
 }

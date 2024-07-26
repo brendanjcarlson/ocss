@@ -3,7 +3,7 @@ package ast
 import (
 	"strings"
 
-	"github.com/brendanjcarlson/ocss/token"
+	"github.com/brendanjcarlson/ocss/types"
 )
 
 var _ StyleSheetNode = (*StyleSheet)(nil)
@@ -18,12 +18,12 @@ func (s *StyleSheet) CSS(minified bool) string {
 }
 
 // Literal implements StyleSheetNode.
-func (s *StyleSheet) Literal() token.Literal {
+func (s *StyleSheet) Literal() types.Literal {
 	out := new(strings.Builder)
 	for _, node := range s.Nodes {
 		out.WriteString(node.Literal().String())
 	}
-	return token.Literal(out.String())
+	return types.Literal(out.String())
 }
 
 // node implements StyleSheetNode.
